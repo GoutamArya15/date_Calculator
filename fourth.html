@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="number" placeholder="Enter the bus price" id="amount_value" value="100000">
+    <div style="border: 1px solid black;">
+        <p style="font-size: 24px;">Within 2 Weeks</p>
+        <b>Enter Booking date</b> <input type="date" onchange="change_amount()" id="current_date"><br><br>
+        Deposit Amount (5%) <input type="number" id="diposit_amount" readonly><br><br>
+        Cancellation Penalty (1.25%) <input type="text" id="cancellation" readonly><br><br>
+        Refundable (3.75%) <input type="text" id="refundable" readonly>
+    </div>
+    <div style="border: 1px solid black;">
+        <p style="font-size: 24px;">3 Days from booking</p>
+        <input type="date" id="three_day" readonly><br><br>
+    </div>
+    <div style="border: 1px solid black;">
+        <p style="font-size: 24px;">Within 2 Weeks</p>
+        <input type="date" id="two_weeks" readonly><br><br>
+    </div>
+    <div style="border: 1px solid black;">
+        <p style="font-size: 24px;">Completion</p>
+        <input type="date" id="complation" readonly><br><br>
+        BSD + ABSD, if applicable <input type="text" id="bsd" readonly><br><br>
+        BSD - Buyers Stamp Duty <input type="text" id="bsd1" readonly><br><br>
+        ABSD-Additional Buyers Stamp Duty <input type="text" value="$0.00" readonly>
+    </div>
+    <div style="border: 1px solid black;">
+        <p style="font-size: 24px;">COMPLETION OF FOUNDATION WORK</p>
+        8 Weeks from Booking:<input type="date" id="eight_weeks" readonly><br><br>
+        Sum of 20% + SD<input type="text" id="fifteen_persant" readonly><br><br>
+        Total Outlay<input type="text" id="total_sd" readonly><br><br>
+    </div>
+    <div style="border: 1px solid black;">
+        <p style="font-size: 24px;">Pay 5% + 5% Loan (Cheque/CO/CPF/Cash/Loan)</p>
+        Enter Launch Date <input type="date" id="launch_date" readonly><br><br>
+        Est. Foundation Stage (6 Months from launch):<input type="text" id="stage" readonly><br><br>
+        Foundation Stage Top Up(Cash CPF for LTV 75% to 70%):<input type="text" id="five_persant" readonly><br><br>
+        Additional Top Up:<input type="text" id="five_persant" value="$0" readonly><br><br>
+        Total Cash/CPF: (Cash/CPF for LTV below 70%)<input type="text" id="total_cpf" readonly><br><br>
+    </div>
+    <script>
+        function change_amount() {
+            let amount_value = parseInt(document.getElementById("amount_value").value);
+            let dipositamount_result = (amount_value * 5) / 100;
+            let cancellation_result = (amount_value * 1.25) / 100;
+            let Refundable_result = (amount_value * 3.75) / 100;
+
+            document.getElementById("diposit_amount").value = dipositamount_result;
+            document.getElementById("cancellation").value = cancellation_result;
+            document.getElementById("refundable").value = Refundable_result;
+
+            let current_date = document.getElementById("current_date").value;
+            let bookingDate = new Date(current_date);
+            bookingDate.setDate(bookingDate.getDate() + 3);
+            let formattedDate3Days = bookingDate.toISOString().split('T')[0];
+            let three_day = document.getElementById("three_day").value = formattedDate3Days;
+
+            let bookingDateTwoWeeks = new Date(three_day);
+            bookingDateTwoWeeks.setDate(bookingDateTwoWeeks.getDate() + 21);
+            let formattedDate2Weeks = bookingDateTwoWeeks.toISOString().split('T')[0];
+            let two_weeks = document.getElementById("two_weeks").value = formattedDate2Weeks;
+
+            let booking_twoweek = new Date(two_weeks);
+            booking_twoweek.setDate(booking_twoweek.getDate() + 14);
+            let formattedDate2Weeks1 = booking_twoweek.toISOString().split('T')[0];
+            document.getElementById("complation").value = formattedDate2Weeks1;
+
+            function calculateBSD(price) {
+                let bsd = 0;
+                if (price <= 180000) {
+                    bsd = price * 0.01;
+                } else if (price <= 360000) {
+                    bsd = (price - 180000) * 0.02 + (180000 * 0.01);
+                } else if (price <= 1000000) {
+                    bsd = (price - 360000) * 0.03 + (180000 * 0.01) + (180000 * 0.02);
+                } else {
+                    bsd = (price - 1000000) * 0.04 + (640000 * 0.03) + (180000 * 0.02) + (180000 * 0.01);
+                }
+                return bsd;
+            }
+            const price = amount_value;
+            const bsd = calculateBSD(price);
+            document.getElementById("bsd").value = `$${bsd}`
+            document.getElementById("bsd1").value = `$${bsd}`
+
+            let eightweek = new Date(current_date);
+            eightweek.setDate(eightweek.getDate() + 56);
+            let formattedDate8Weeks = eightweek.toISOString().split('T')[0];
+            document.getElementById("eight_weeks").value = formattedDate8Weeks;
+
+            let fifteen_persant = (amount_value * 15) / 100;
+            document.getElementById("fifteen_persant").value = fifteen_persant;
+
+            let twenty_persant = (amount_value * 20) / 100;
+            let one_persant = (amount_value * 1) / 100;
+            let sd = twenty_persant + one_persant;
+            document.getElementById("total_sd").value = sd;
+
+            document.getElementById("launch_date").value = current_date;
+
+            let stage = new Date(current_date);
+            stage.setDate(stage.getDate() + 180);
+            let formattedDateStage = stage.toISOString().split('T')[0];
+            document.getElementById("stage").value = formattedDateStage;
+
+            let five_persant = (amount_value * 5) / 100;
+            document.getElementById("five_persant").value = five_persant;
+
+            let seventy_five_persant = (amount_value * 75) / 100;
+            let cpf_total = amount_value - seventy_five_persant;
+            document.getElementById("total_cpf").value = cpf_total;
+        }
+
+    </script>
+</body>
+
+</html>
